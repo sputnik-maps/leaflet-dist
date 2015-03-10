@@ -2,7 +2,7 @@
  Leaflet, a JavaScript library for mobile-friendly interactive maps. http://leafletjs.com
  (c) 2010-2013, Vladimir Agafonkin
  (c) 2010-2011, CloudMade
-*/
+ */
 (function (window, document, undefined) {
 var oldL = window.L,
 	L = {};
@@ -3559,7 +3559,7 @@ L.Marker = L.Class.extend({
 		}
 
 		if (this._popup) {
-			this.bindPopup(this._popup);
+			this.bindPopup(this._popup, this._popup.options);
 		}
 
 		return this;
@@ -3693,7 +3693,7 @@ L.Marker = L.Class.extend({
 		// TODO refactor into something shared with Map/Path/etc. to DRY it up
 
 		var icon = this._icon,
-		    events = ['dblclick', 'mousedown', 'mouseover', 'mouseout', 'contextmenu'];
+			events = ['dblclick', 'mousedown', 'mouseover', /*'mousemove', */'mouseout', 'contextmenu'];
 
 		L.DomUtil.addClass(icon, 'leaflet-clickable');
 		L.DomEvent.on(icon, 'click', this._onMouseClick, this);
@@ -3739,11 +3739,23 @@ L.Marker = L.Class.extend({
 	},
 
 	_fireMouseEvent: function (e) {
-
-		this.fire(e.type, {
+		// it's in pull request on github (@link https://github.com/Leaflet/Leaflet/pull/2798)
+		var params = {
 			originalEvent: e,
 			latlng: this._latlng
-		});
+		};
+		if ('mousemove' === e.type) {
+			if (! this._map) {
+				return;
+			}
+			var map = this._map;
+			params.containerPoint = map.mouseEventToContainerPoint(e);
+			params.layerPoint = map.containerPointToLayerPoint(params.containerPoint);
+			params.latlng = map.layerPointToLatLng(params.layerPoint);
+			//L.DomEvent.stopPropagation(e);
+		}
+
+		this.fire(e.type, params);
 
 		// TODO proper custom event propagation
 		// this line will always be called if marker is in a FeatureGroup
@@ -4510,6 +4522,8 @@ L.Path = L.Class.extend({
 		opacity: 0.5,
 
 		fill: false,
+		// it's in pull-request on github (@link https://github.com/Leaflet/Leaflet/pull/2834)
+		fillRule: 'evenodd',
 		fillColor: null, //same as color by default
 		fillOpacity: 0.2,
 
@@ -4669,7 +4683,7 @@ L.Path = L.Path.extend({
 			this._path.setAttribute('stroke-linecap', 'round');
 		}
 		if (this.options.fill) {
-			this._path.setAttribute('fill-rule', 'evenodd');
+			this._path.setAttribute('fill-rule', this.options.fillRule || 'evenodd');
 		}
 		if (this.options.pointerEvents) {
 			this._path.setAttribute('pointer-events', this.options.pointerEvents);
