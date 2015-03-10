@@ -1,20 +1,20 @@
 {
-  "name": "leaflet",
+  "name": "sm-leaflet",
   "version": "0.7.2",
   "main": ["leaflet-src.js", "leaflet.css"],
-  "description": "Leaflet Bower package",
+  "description": "Sputnik Maps Leaflet Bower package",
   "ignore": [
     ".DS_Store",
     ".git",
     ".gitignore"
   ],
-  "homepage": "https://github.com/vperron/leaflet-dist",
+  "homepage": "https://github.com/sputnik-maps/leaflet-dist",
   "_release": "0.7.2",
   "_resolution": {
     "type": "version",
     "tag": "v0.7.2"
   },
-  "_source": "git://github.com/vperron/leaflet-dist.git",
+  "_source": "git://github.com/sputnik-maps/leaflet-dist.git",
   "_target": "0.7.2",
-  "_originalSource": "leaflet"
+  "_originalSource": "vperron/leaflet-dist"
 }
