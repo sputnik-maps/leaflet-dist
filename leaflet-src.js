@@ -4522,8 +4522,8 @@
 			opacity: 0.5,
 
 			fill: false,
-		// it's in pull-request on github (@link https://github.com/Leaflet/Leaflet/pull/2834)
-		fillRule: 'evenodd',
+			// it's in pull-request on github (@link https://github.com/Leaflet/Leaflet/pull/2834)
+			fillRule: 'evenodd',
 			fillColor: null, //same as color by default
 			fillOpacity: 0.2,
 
